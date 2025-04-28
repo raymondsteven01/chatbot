@@ -50,6 +50,9 @@ if "generated_sql" not in st.session_state:
 if "user_prompt" not in st.session_state:
     st.session_state.user_prompt = ""
 
+if "explanation" not in st.session_state:
+    st.session_state.explanation = ""
+
 # --- FUNCTIONS ---
 
 def get_openai_client(api_key):
@@ -71,10 +74,13 @@ def is_select_query(sql):
 def generate_sql_from_text(client, user_prompt):
     system_prompt = (
         "You are a Snowflake SQL expert. "
-        "Fix typos if needed, and translate the user request into a safe SELECT SQL query. "
-        "Ensure the query has a LIMIT 1000 if not specified. "
-        "Do not use DELETE, UPDATE, INSERT, DROP, ALTER, CREATE, or any non-SELECT command. "
-        "Respond ONLY with the SQL query."
+        "You know the following tables exist:\n"
+        " - `customers` (customer_id, name, email, signup_date)\n"
+        " - `orders` (order_id, customer_id, order_date, amount)\n"
+        " - `products` (product_id, name, price)\n"
+        "Always prefer using these tables and columns appropriately. "
+        "Fix typos if needed, and generate a safe SELECT SQL query with LIMIT 1000 if not specified. "
+        "Do NOT use DELETE, UPDATE, INSERT, DROP, etc. Respond ONLY with SQL."
     )
     try:
         response = client.chat.completions.create(
@@ -90,6 +96,26 @@ def generate_sql_from_text(client, user_prompt):
         st.error(f"Error generating SQL: {e}")
         st.stop()
 
+def generate_explanation(client, user_prompt, sql_query):
+    explanation_prompt = (
+        "Explain briefly how you interpreted the following request into an SQL query. "
+        "Be concise, mention any assumptions, corrections, or interpretations you made.\n\n"
+        f"Request: {user_prompt}\n\nSQL Query: {sql_query}\n\n"
+        "Your Explanation:"
+    )
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "user", "content": explanation_prompt}
+            ]
+        )
+        explanation = response.choices[0].message.content.strip()
+        return explanation
+    except Exception as e:
+        st.error(f"Error generating explanation: {e}")
+        return "No explanation available."
+
 def simulate_query_execution():
     # Simulate dummy DataFrame
     data = {
@@ -103,6 +129,7 @@ def simulate_query_execution():
 def reset_form():
     st.session_state.generated_sql = ""
     st.session_state.user_prompt = ""
+    st.session_state.explanation = ""
 
 # --- SIDEBAR: API Key Input ---
 with st.sidebar:
@@ -157,6 +184,11 @@ with st.form("sql_generator_form"):
             st.session_state.generated_sql = sql_query
             st.session_state.user_prompt = user_input
 
+            with st.spinner("Interpreting your request..."):
+                explanation = generate_explanation(st.session_state.client, user_input, sql_query)
+
+            st.session_state.explanation = explanation
+
 # --- AFTER FORM SUBMIT ---
 if st.session_state.generated_sql:
     st.subheader("🛠️ Generated SQL Query")
@@ -169,8 +201,8 @@ if st.session_state.generated_sql:
         mime="text/plain"
     )
 
-    st.subheader("💬 Your Original Request")
-    st.write(st.session_state.user_prompt)
+    st.subheader("💬 Interpretation of Your Request")
+    st.write(st.session_state.explanation)
 
     simulate = st.button("🚀 Simulate Query Execution")
 
