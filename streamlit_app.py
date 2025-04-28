@@ -139,7 +139,19 @@ with st.sidebar:
             st.success("API Key saved. Ready to generate!")
 
 # --- MAIN APP UI ---
-st.title("📝 Natural Language ➔ SQL Generator")
+
+st.title("📝 Superbank Data Analytics Team: Natural Language ➔ SQL Generator App")
+
+st.markdown(
+    """
+    **About this App**  
+    This application was developed by the **Data Analytics Team** to empower **business users** in generating accurate and secure **SQL queries** for extracting data from our **Snowflake database**.  
+    By simply describing your data needs in natural language, the app automatically translates your request into an optimized SQL query, following best practices for security and efficiency.
+
+    Our goal is to make data access easier, faster, and safer — without needing deep technical SQL knowledge. 🚀
+    """
+)
+
 st.write("Describe your request, and I'll craft a secure SQL query for you.")
 
 if not st.session_state.api_key_provided:
