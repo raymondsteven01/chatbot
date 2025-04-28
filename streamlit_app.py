@@ -60,4 +60,9 @@ st.title("📝 Natural Language to SQL Generator")
 st.write("Type your request in natural language, and I'll generate the corresponding SQL query for you.")
 
 # User input for data request
-user_input = st.text_area("📝 Your Data Request:", placeholder="e.g., Show me total sales by
+# User input for data request
+user_input = st.text_area(
+    "📝 Your Data Request:",
+    placeholder="e.g., Show me total sales by month for 2024",
+    height=150
+)
