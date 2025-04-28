@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 
 # --- CONFIGURATION ---
 st.set_page_config(page_title="SQL Query Generator", page_icon="📝")
