@@ -4,7 +4,7 @@ import pandas as pd
 import re
 
 # --- CONFIGURATION ---
-SUPERBANK_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/8/89/HD_transparent_picture.png"  # <-- Replace with real Superbank logo (direct PNG)
+SUPERBANK_LOGO_URL = "https://www.superbank.id/content/img/logo_dark.webp"  # <-- Replace with real Superbank logo (direct PNG)
 PAGE_BACKGROUND_COLOR = "#afee00ff"
 
 st.set_page_config(
