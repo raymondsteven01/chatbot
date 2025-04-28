@@ -4,7 +4,7 @@ import pandas as pd
 import re
 
 # --- CONFIGURATION ---
-SUPERBANK_LOGO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi6LE5N8oHmFoBSYpnJ6O_53in-360ewtuKQ&s"  # <-- Replace with real Superbank logo (direct PNG)
+SUPERBANK_LOGO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi6LE5N8oHmFoBSYpnJ6O_53in-360ewtuKQ&s"
 PAGE_BACKGROUND_COLOR = "#afee00ff"
 
 st.set_page_config(
@@ -22,12 +22,17 @@ st.markdown(
     [data-testid="stSidebar"] > div:first-child {{
         background-color: #ffffff;
     }}
-    .superbank-label::before {{
-        content: url('{SUPERBANK_LOGO_URL}');
-        display: inline-block;
+    .superbank-label {{
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }}
+    .superbank-label img {{
         width: 24px;
         height: 24px;
-        margin-right: 10px;
+        margin-right: 8px;
         vertical-align: middle;
     }}
     </style>
@@ -119,9 +124,18 @@ if not st.session_state.api_key_provided:
 
 # --- FORM ---
 with st.form("sql_generator_form"):
-    st.markdown('<label class="superbank-label">Your Data Request:</label>', unsafe_allow_html=True)
+    # Custom Label with Logo
+    st.markdown(
+        f"""
+        <div class="superbank-label">
+            <img src="{SUPERBANK_LOGO_URL}" alt="Logo"> Your Data Request:
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     user_input = st.text_area(
-        label=" ",  # Empty because label handled manually
+        label=" ",  # Empty because label is handled above
         placeholder="e.g., Show total sales by month for 2024",
         height=150,
         value=st.session_state.user_prompt
