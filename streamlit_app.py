@@ -16,7 +16,7 @@ st.set_page_config(
 st.markdown(
     f"""
     <style>
-    body {{
+    [data-testid="stAppViewContainer"] {{
         background-color: {PAGE_BACKGROUND_COLOR};
     }}
     [data-testid="stSidebar"] > div:first-child {{
