@@ -74,13 +74,10 @@ def is_select_query(sql):
 def generate_sql_from_text(client, user_prompt):
     system_prompt = (
         "You are a Snowflake SQL expert. "
-        "You know the following tables exist:\n"
-        " - `customers` (customer_id, name, email, signup_date)\n"
-        " - `orders` (order_id, customer_id, order_date, amount)\n"
-        " - `products` (product_id, name, price)\n"
-        "Always prefer using these tables and columns appropriately. "
-        "Fix typos if needed, and generate a safe SELECT SQL query with LIMIT 1000 if not specified. "
-        "Do NOT use DELETE, UPDATE, INSERT, DROP, etc. Respond ONLY with SQL."
+        "Fix typos if needed, and translate the user request into a safe SELECT SQL query. "
+        "Ensure the query has a LIMIT 1000 if not specified. "
+        "Do not use DELETE, UPDATE, INSERT, DROP, ALTER, CREATE, or any non-SELECT command. "
+        "Respond ONLY with the SQL query."
     )
     try:
         response = client.chat.completions.create(
