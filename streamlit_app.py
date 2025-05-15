@@ -53,7 +53,7 @@ if submitted:
                 "You are a data analyst in a digital banking team.\n"
                 "Given the monthly transacting user data and its breakdown by transaction type, "
                 "analyze the month-on-month growth and identify possible root causes for any increase or decrease.\n\n"
-                "Please do highlight on the latest month data since business team usually only focuses on the latest performance"
+                "Please do highlight on the latest month data since business team usually only focuses on the latest performance. Don't forget the seasonality factor of holiday in Indonesia"
                 "Don't forget to include the amount like monthly transacting user and its % growth"
                 "Here is the overall metric data:\n"
                 f"{overall_text}\n\n"
