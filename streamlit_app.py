@@ -60,8 +60,7 @@ if submitted:
                 "And here is the breakdown data:\n"
                 f"{breakdown_text}\n\n"
                 "Please generate an executive-level summary insight"
-                "Recommendation on another aspects that needs to be dig further:\n"
-                f"{recommendation_text}\n\n"
+                "Recommendation on another aspects that needs to be dig further."
             )
 
             with st.spinner("Analyzing your data..."):
