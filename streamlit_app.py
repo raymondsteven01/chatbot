@@ -20,37 +20,34 @@ st.write(
     "The AI will generate growth insights and suggest potential root causes."
 )
 
-# --- FILE UPLOAD ---
-col1, col2 = st.columns(2)
+# --- FILE UPLOAD + BUTTON IN A FORM ---
+with st.form("insight_form"):
+    st.subheader("📥 Upload Your Data")
 
-with col1:
-    overall_csv = st.file_uploader("📊 Upload Monthly Transacting Metrics CSV", type=["csv"])
-with col2:
-    breakdown_csv = st.file_uploader("📉 Upload Breakdown Performance CSV", type=["csv"])
+    col1, col2 = st.columns(2)
+    with col1:
+        overall_csv = st.file_uploader("📊 Monthly Transacting Metrics CSV", type=["csv"], key="overall")
+    with col2:
+        breakdown_csv = st.file_uploader("📉 Breakdown by Transaction Type CSV", type=["csv"], key="breakdown")
+
+    submitted = st.form_submit_button("🧠 Generate Insights")
 
 # --- PROCESS ---
-if overall_csv and breakdown_csv:
-    overall_df = pd.read_csv(overall_csv)
-    breakdown_df = pd.read_csv(breakdown_csv)
+if submitted:
+    if overall_csv and breakdown_csv:
+        try:
+            overall_df = pd.read_csv(overall_csv)
+            breakdown_df = pd.read_csv(breakdown_csv)
 
-    st.subheader("📋 Preview: Overall Transacting Metrics")
-    st.dataframe(overall_df)
+            st.subheader("📋 Preview: Overall Transacting Metrics")
+            st.dataframe(overall_df)
 
-    st.subheader("📋 Preview: Breakdown by Transaction Type")
-    st.dataframe(breakdown_df)
+            st.subheader("📋 Preview: Breakdown by Transaction Type")
+            st.dataframe(breakdown_df)
 
-    # Combine and summarize for the prompt
-    try:
-        overall_text = overall_df.to_markdown(index=False)
-        breakdown_text = breakdown_df.to_markdown(index=False)
-    except:
-        st.error("Make sure your CSVs follow the expected format.")
-        st.stop()
-
-    st.markdown("---")
-
-    if st.button("🧠 Generate Insights"):
-        with st.spinner("Analyzing your data..."):
+            # Convert DataFrames to markdown-style text for prompt
+            overall_text = overall_df.to_markdown(index=False)
+            breakdown_text = breakdown_df.to_markdown(index=False)
 
             prompt = (
                 "You are a data analyst in a digital banking team.\n"
@@ -63,19 +60,21 @@ if overall_csv and breakdown_csv:
                 "Please generate an executive-level summary insight."
             )
 
-            try:
+            with st.spinner("Analyzing your data..."):
                 response = client.chat.completions.create(
                     model="gpt-4",
-                    messages=[{"role": "system", "content": "You are a banking analytics expert."},
-                              {"role": "user", "content": prompt}]
+                    messages=[
+                        {"role": "system", "content": "You are a banking analytics expert."},
+                        {"role": "user", "content": prompt}
+                    ]
                 )
-                insight = response.choices[0].message.content.strip()
 
-                st.subheader("🔍 AI-Generated Insight")
-                st.write(insight)
+            insight = response.choices[0].message.content.strip()
 
-            except Exception as e:
-                st.error(f"Error while generating insights: {e}")
+            st.subheader("🔍 AI-Generated Insight")
+            st.write(insight)
 
-else:
-    st.info("Please upload both CSV files to continue.")
+        except Exception as e:
+            st.error(f"⚠️ Error processing your files or generating insight: {e}")
+    else:
+        st.warning("Please upload both CSV files before submitting.")
