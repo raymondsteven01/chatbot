@@ -53,13 +53,14 @@ if submitted:
                 "You are a data analyst in a digital banking team.\n"
                 "Given the monthly transacting user data and its breakdown by transaction type, "
                 "analyze the month-on-month growth and identify possible root causes for any increase or decrease.\n\n"
-                "Please do highlight on the latest month data since business team usually only focuses on the latest performance"
+                "Put emphasize on the latest month data since business team usually only focuses on the latest performance"
                 "Don't forget to include the amount like monthly transacting user and its % growth"
                 "Here is the overall metric data:\n"
                 f"{overall_text}\n\n"
                 "And here is the breakdown data:\n"
                 f"{breakdown_text}\n\n"
                 "Please generate an executive-level summary insight."
+                "Lastly, give recommendation what would be another POV that we need to explore to understand further the issue"
             )
 
             with st.spinner("Analyzing your data..."):
