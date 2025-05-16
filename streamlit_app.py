@@ -43,6 +43,7 @@ if uploaded_file:
                     "(DoD) and week-over-week (WoW) growth changes. Include commentary on potential root causes using the context "
                     "from LIST_MERCHANT (e.g., push notification exposure) and EVENT_DESCRIPTION (e.g., public holidays). "
                     "Avoid summarizing all rows. Focus on days with high or low growth. Provide insights in a structured and readable format.\n\n"
+                    "Make conclusion whether certain notification exposure or publich holidays have an effect to the metrics in general"
                     f"Here is the data:\n{data_text}"
                 )
 
