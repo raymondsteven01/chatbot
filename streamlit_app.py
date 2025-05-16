@@ -20,7 +20,7 @@ if not openai_api_key:
 client = OpenAI(api_key=openai_api_key)
 
 # File uploader
-uploaded_file = st.file_uploader("📁 Upload your DTU xlsx file", type=["xlsx"])
+uploaded_file = st.file_uploader("📁 Upload your DTU file", type=["csv"])
 
 if uploaded_file:
     try:
